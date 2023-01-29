@@ -27,17 +27,40 @@ var body: some View {
 }
 */
 
+/*
+ @State private var tapCount = 0
+ var body: some View {
+     Button("Tap count: \(tapCount)") {
+         self.tapCount += 1
+     }
+ }
+ 
+ mutating func incrementCount() {
+     tapCount += 1
+ }
+ */
+
+
+
+/// Two Way Binding
+/*
+ @State private var username: String = ""
+ var body: some View {
+     Form {
+         TextField("what", text: $username)
+         Text(username)
+     }
+ }
+ */
+
 // State helps in modifying in the struct...
 struct ContentView: View {
-    @State private var tapCount = 0
+    @State private var username: String = ""
     var body: some View {
-        Button("Tap count: \(tapCount)") {
-            self.tapCount += 1
+        Form {
+            TextField("what", text: $username)
+            Text(username)
         }
-    }
-    
-    mutating func incrementCount() {
-        tapCount += 1
     }
 }
 
