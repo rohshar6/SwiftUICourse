@@ -55,11 +55,17 @@ var body: some View {
 
 // State helps in modifying in the struct...
 struct ContentView: View {
-    @State private var username: String = ""
+    let students = ["rohit", "Hermione", "Ron", "Harry"]
+    @State private var selectedStudent = "Harry"
     var body: some View {
-        Form {
-            TextField("what", text: $username)
-            Text(username)
+        NavigationStack {
+            Form {
+                Picker("Select Your Student", selection: $selectedStudent) {
+                    ForEach(students, id: \.self) {
+                        Text($0)
+                    }
+                }
+            }
         }
     }
 }
