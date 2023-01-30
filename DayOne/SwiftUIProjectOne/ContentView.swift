@@ -55,7 +55,7 @@ var body: some View {
 
 // State helps in modifying in the struct...
 struct ContentView: View {
-    let students = ["rohit", "Hermione", "Ron", "Harry"]
+    let students = ["Hermione", "Ron", "Harry"]
     @State private var selectedStudent = "Harry"
     var body: some View {
         NavigationStack {
