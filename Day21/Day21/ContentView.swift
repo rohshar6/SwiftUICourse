@@ -13,6 +13,9 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var countries = ["estonia", "france", "germany", "ireland", "italy", "nigeria", "poland", "russia", "spain", "uk", "us"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
+    @State private var showWrongAnswerAlert = false
+    @State private var numberOfAskedQuestion = 0
+    @State private var gameResetAlert = false
     
     var body: some View {
         ZStack {
@@ -58,15 +61,31 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
-                Text("Score: \(score)")
-                    .foregroundColor(.white)
-                    .font(.title.bold())
+                VStack(spacing: 10) {
+                    Text("Score: \(score)")
+                        .foregroundColor(.white)
+                        .font(.title.bold())
+                    Text("Question Asked: \(numberOfAskedQuestion)")
+                        .foregroundColor(.white)
+                        .font(.title.bold())
+                }.frame(alignment: .center)
+                
+                
+                
                 Spacer()
             }.padding()
         }.alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
             Text("Your score is : \(score)")
+        }.alert("Wrong Answer", isPresented: $showWrongAnswerAlert) {
+            Button("Continue", action: askQuestion)
+        } message: {
+            Text("Correct answer is option: \(correctAnswer + 1)")
+        }.alert("Game is reset", isPresented: $gameResetAlert) {
+            Button("Reset", action: askQuestion)
+        } message: {
+            Text("Game is reset")
         }
     }
     
@@ -74,11 +93,32 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1;
+            showingScore = true
         } else {
             scoreTitle = "wrong"
             score -= 1;
+            showAlert()
+            showWrongAnswerAlert = true
         }
-        showingScore = true
+        
+        numberOfAskedQuestion += 1
+        if numberOfAskedQuestion == 8 {
+            resetAll()
+        }
+    }
+    
+    func resetAll() {
+        score = 0
+        scoreTitle = ""
+        showWrongAnswerAlert = false
+        showingScore = false
+        numberOfAskedQuestion = 0
+        gameResetAlert = true
+        askQuestion()
+    }
+    
+    func showAlert() {
+        
     }
     
     func askQuestion() {
