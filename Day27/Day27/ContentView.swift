@@ -16,26 +16,37 @@ struct ContentView: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingAlert = false
+    @State private var coffeeCups = [1,2,3,4,5,6,7,8,9,10]
     
     var body: some View {
         NavigationStack {
-
-            VStack (alignment: .leading) {
-                
-                Text("When do you want to wake up?")
-                    .font(.headline)
-                
-                DatePicker("Please Select Wake Up Time: ", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                
-                Text("Desired Amount of sleep")
-                    .font(.headline)
-                Stepper("Sleep Amount : \(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
-                
-                Text("Daily Coffee intake")
-                    .font(.headline)
-                Stepper("Coffee Amount : \(coffeeAmount.formatted()) cups", value: $coffeeAmount, in: 1...20, step: 1)
+            List {
+                Section(content: {
+                    Text("When do you want to wake up?")
+                        .font(.headline)
+                    
+                    DatePicker("Please Select Wake Up Time: ", selection: $wakeUp, displayedComponents: .hourAndMinute)
+//                        .labelsHidden()
+                    
+                    Text("Desired Amount of sleep")
+                        .font(.headline)
+                    Stepper("Sleep Amount : \(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                    
+                    Text("Daily Coffee intake")
+                        .font(.headline)
+                    Picker("Coffee Amount", selection: $coffeeAmount) {
+                        ForEach($coffeeCups, id: \.self) {val in
+                            let txt = """
+                            \(val.wrappedValue)
+                          """
+                            Text(txt)
+                        }
+                    }
+                }, header: {
+                    Text("")
+                })
             }
+           
             .alert(alertTitle, isPresented: $showingAlert) {
                 Button("OK") {}
             } message: {
@@ -80,3 +91,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+/*
+ 
+ */
