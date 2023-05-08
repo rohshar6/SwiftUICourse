@@ -11,7 +11,7 @@ import SwiftUI
 struct Day29App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BoltPractice()
         }
     }
 }

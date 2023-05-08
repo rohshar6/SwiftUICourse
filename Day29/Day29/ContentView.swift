@@ -15,38 +15,52 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var score = 0
     
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    TextField("Enter your Word", text: $newWord)
-                        .textInputAutocapitalization(.never)
-                }
-                
-                Section {
-                    ForEach(words, id: \.self) { word in
-                        HStack {
-                            Image(systemName: "\(word.count).circle")
-                            Text(word)
+            VStack {
+                List {
+                    Section {
+                        TextField("Enter your Word", text: $newWord)
+                            .textInputAutocapitalization(.never)
+                    }
+                    
+                    Section {
+                        ForEach(words, id: \.self) { word in
+                            HStack {
+                                Image(systemName: "\(word.count).circle")
+                                Text(word)
+                            }
+                            
                         }
-                        
                     }
                 }
-            }
-            .navigationTitle(rootWord)
-            .onSubmit {
-                addNewWord()
-            }
-            .onAppear(perform: loadFile)
-            .alert(errorTitle, isPresented: $showingError) {
-                Button("ok", role: .cancel) {
-                    
+                .navigationTitle(rootWord)
+                .onSubmit {
+                    addNewWord()
                 }
-            } message: {
-                Text(errorMessage)
+                .onAppear(perform: loadFile)
+                .alert(errorTitle, isPresented: $showingError) {
+                    Button("ok", role: .cancel) {
+                        
+                    }
+                } message: {
+                    Text(errorMessage)
+                }
+                .toolbar {
+                    Button("restart") {
+                        updateRootWord()
+                    }
+                }
+                
+                Text("Score: \(score)")
             }
         }
+    }
+    
+    func updateRootWord() {
+        loadFile()
     }
     
     func addNewWord() {
@@ -54,23 +68,25 @@ struct ContentView: View {
         
         guard !answer.isEmpty else { return }
         
-        guard isOriginal(word: answer) else {
-            wordError(title: "Word used already", message: "Be more original!")
-            return
+//        guard isOriginal(word: answer) else {
+//            wordError(title: "Word used already", message: "Be more original!")
+//            return
+//        }
+//
+//        guard isPossible(word: answer) else {
+//            wordError(title: "Word not possible", message: "You can't spell this word")
+//            return
+//        }
+//
+//        guard isReal(word: answer) else {
+//            wordError(title: "word not recongized", message: "you can't just make up words, you know")
+//            return
+//        }
+        
+        withAnimation(.linear(duration: 15)) {
+            words.insert(answer, at: 0)
         }
-        
-        guard isPossible(word: answer) else {
-            wordError(title: "Word not possible", message: "You can't spell this word")
-            return
-        }
-        
-        guard isReal(word: answer) else {
-            wordError(title: "word not recongized", message: "you can't just make up words, you know")
-            return
-        }
-        
-        
-        withAnimation {
+        withAnimation(Animation.linear.repeatCount(2)) {
             words.insert(answer, at: 0)
         }
         
@@ -121,6 +137,29 @@ struct ContentView: View {
         errorMessage = message
         showingError = true
     }
+    
+    func isAllowed(word: String) -> Bool {
+        guard word.count > 3 && !word.elementsEqual(rootWord) else { return false }
+        return true
+    }
+}
+
+struct ContentView2: View {
+    @State private var showDetails = false
+
+    var body: some View {
+        VStack {
+            Button("Press to show details") {
+                withAnimation(.linear(duration: 1).delay(5)) {
+                    showDetails.toggle()
+                }
+            }
+
+            if showDetails {
+                Text("Details go here.")
+            }
+        }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -128,3 +167,11 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+//
+//  BoltPractice.swift
+//  M1BroadcasterBooth
+//
+//  Created by Joe Morgan on 2022-12-23.
+//
+
